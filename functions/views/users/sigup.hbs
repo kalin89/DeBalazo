@@ -1,3 +1,5 @@
+
+
 <div class="container-fluid">
     <div class="container">
         <form action="/users/sigup" method="POST">
@@ -10,48 +12,48 @@
                         <div class="card-body">
                             <div class="row form-group">
                                 <div class="col-md-4">
-                                    <input type="text" required name="nombreComercio" class="form-control" placeholder="NOMBRE DEL COMERCIO"
+                                    <input type="text" required name="nombreComercio" value="{{nombreComercio}}" class="form-control" placeholder="NOMBRE DEL COMERCIO"
                                         autofocus>
                                 </div>
                                 <div class="col-md-4">
                                     <select name="giroComercio" required class="form-control">
-                                        <option selected="true" value="" hidden disabled>GIRO DE LA EMPRESA</option>
+                                        <option selected value="" hidden disabled>GIRO DE LA EMPRESA</option>   <!--hidden disabled-->
                                         {{#each giro}}
-                                        <option value"{{this.key}}">{{this.value}}</option>
+                                        <option value="{{this.value}}" {{this.selected}}>{{this.value}}</option>
                                         {{/each}}
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" required name="calle" class="form-control" placeholder="CALLE">
+                                    <input type="text" required name="calle" class="form-control" placeholder="CALLE" value="{{calle}}">
                                 </div>
                             </div>
             
                             <div class="row form-group">
                                 <div class="col-md-4">
-                                    <input type="text" required name="noExterior" class="form-control" placeholder="NO EXTERIOR">
+                                    <input type="text" required name="noExterior" class="form-control" placeholder="NO EXTERIOR" value="{{noExterior}}">
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" required name="noInterior" class="form-control" placeholder="NO INTERIOR">
+                                    <input type="text" name="noInterior" class="form-control" placeholder="NO INTERIOR" value="{{noInterior}}">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" required id="telefono" maxlength="10" name="telefono" class="form-control" placeholder="CELULAR">
+                                    <input type="text" required id="telefono" maxlength="10" name="telefono" class="form-control" placeholder="CELULAR" value="{{telefono}}">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" required id="cp" name="cp" maxlength="5" class="form-control" placeholder="CODIGO POSTAL">
+                                    <input type="text" required id="cp" name="cp" maxlength="5" class="form-control" placeholder="CODIGO POSTAL" value="{{cp}}">
                                 </div>
                             </div>
             
                             <div class="row form-group">
                                 <div class="col-md-4">
                                     <select id="colonia" required name="colonia" class="form-control">
-                                        <option selected="true" value="" hidden disabled>COLONIA</option>
+                                        <option selected="true" value="colonia" hidden disabled>COLONIA</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" required id="ciudad" name="ciudad" disabled class="form-control clear" placeholder="CIUDAD">
+                                    <input type="text" required id="ciudad" name="ciudad" readonly class="form-control clear" placeholder="CIUDAD" value="{{ciudad}}">
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" required id="estado" name="estado" disabled class="form-control clear" placeholder="ESTADO">
+                                    <input type="text" id="estado" name="estado" readonly class="form-control clear" placeholder="ESTADO" value="{{estado}}">
                                 </div>
                             </div>
                         </div>
@@ -68,24 +70,24 @@
                         <div class="card-body">
                             <div class="row form-group">
                                 <div class="col-md-4">
-                                    <input type="text" required name="nombre" class="form-control" placeholder="NOMBRE">
+                                    <input type="text" required name="nombre" class="form-control" placeholder="NOMBRE" value="{{nombre}}">
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" required name="apPaterno" class="form-control" placeholder="APELLIDO PATERNO">
+                                    <input type="text" required name="apPaterno" class="form-control" placeholder="APELLIDO PATERNO" value="{{apPaterno}}">
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" required name="apMaterno" class="form-control" placeholder="APELLIDO MATERNO">
+                                    <input type="text" required name="apMaterno" class="form-control" placeholder="APELLIDO MATERNO" value="{{apMaterno}}">
                                 </div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-md-4">
-                                    <input type="email" required name="email" class="form-control" placeholder="EMAIL">
+                                    <input type="email" required name="email" class="form-control" placeholder="EMAIL" value="{{email}}">
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" required name="password" class="form-control" placeholder="PASSWORD">
+                                    <input type="password" required name="password" class="form-control" placeholder="PASSWORD">
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" required name="passwordConfirm" class="form-control" placeholder="CONFIRMAR PASSWORD">
+                                    <input type="password" required name="passwordConfirm" class="form-control" placeholder="CONFIRMAR PASSWORD">
                                 </div>
                             </div>
                         </div>
@@ -105,10 +107,40 @@
     </div>
 </div>
 
+{{#if giroComercio}}
+ {{giroComercio}}
+ {{colonia}}
+ {{/if}}
+
 
 
 
  <script>
+
+     $(document).ready(function(){
+
+         var cp = $('#cp').val();
+         colonia = '{{colonia}}';
+         if(cp != ''){
+            $.ajax({
+                url: '/users/buscarColonias/' + cp,
+                method: 'GET',
+                data: {cp: cp},
+            }).done(function(res){
+                $("#colonia").empty();
+                //$("#colonia").append('<option value="" hidden disabled selected>SELECCIONE COLONIA</option>');
+                for(var k in res.colonias) {
+                $("#colonia").append(new Option(res.colonias[k],res.colonias[k]));
+                }
+                $('#ciudad').val(res.ciudad);
+                $('#estado').val(res.estado);
+                $("#colonia").val(colonia);
+            })
+         } 
+         
+
+     });
+     
     $("#cp").keyup(function () {
         var letras = this.value.length;
         if(letras == 5)
@@ -124,7 +156,7 @@
                     $("#colonia").empty();
                     $("#colonia").append('<option value="" hidden disabled selected>SELECCIONE COLONIA</option>');
                     for(var k in res.colonias) {
-                    $("#colonia").append(new Option(res.colonias[k],k));
+                    $("#colonia").append(new Option(res.colonias[k],res.colonias[k]));
                     }
                     $('#ciudad').val(res.ciudad);
                     $('#estado').val(res.estado);

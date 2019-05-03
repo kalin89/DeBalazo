@@ -21,13 +21,14 @@
     
     <title>DeBalazo</title>
 </head>
-<body>
+<body class="dbbg">
         
     {{> navigation }}
 
     <main>
 
-        <div class="container dbbg p-4">
+        <div class="container p-4">
+            {{> success}}
             {{> errors }}
     
             {{{body}}}

@@ -9,7 +9,7 @@ helpers.isAuthenticated = (req, res, next) => {
         req.user = user;
         next();
     } else {
-        req.flash('error', 'No autorizado');
+        //req.flash('error', 'No autorizado');
         res.render('users/sigin')
     }
 };

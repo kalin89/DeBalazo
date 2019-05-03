@@ -23,12 +23,13 @@ $(document).ready(function () {
         // alert(e.target.result);
         $('#profile-img-tag').attr('src', e.target.result);
         $('#profile-img-tag').attr('alt', titulo);
+        //$('#urlImage').val(e.target.result);
       }
       reader.readAsDataURL(input.files[0]);
     }
   };
 
-  $('#profile-img').change(function () {
+  $('#image').change(function () {
     readURL(this);
   });
   // ****** CAMBIAR IMAGEN DEBALAZO POR PLATILLO/BEBIDA ******

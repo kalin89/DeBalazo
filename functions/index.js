@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const firebase = require("firebase");
@@ -7,7 +8,9 @@ const exphbs = require('express-handlebars');
 const methosOverride= require('method-override');
 const session = require('express-session');
 const passport = require('passport');
-const flash = require('connect-flash');
+const multer = require('multer');
+//const flash = require('connect-flash');
+
 
 
 
@@ -37,27 +40,29 @@ var config = {
   };
 firebase.initializeApp(config);
 
-
-//Middlewares
-app.use(express.urlencoded({extended:false}));   //Entender los datos que envia el usuario desde los controles
-app.use(methosOverride('_method')) //Formularios puedan enviar diferentes metodos como put o delete
 app.use(session({   //autenticar un usuario y mantenerlo en la sesion
     secret: 'mysecretapp',
     resave:true,
     saveUninitialized: true
 }));
 
+//Middlewares
+
+app.use(express.urlencoded({extended:true}));   //Entender los datos que envia el usuario desde los controles
+app.use(methosOverride('_method')) //Formularios puedan enviar diferentes metodos como put o delete
+
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
+//app.use(flash());
+
 
 
 //Variables Globales
-app.use((req, res, next) => {
-    res.locals.error = req.flash('error');
-    res.locals.user = req.user || null;
-    next();
-});
+// app.use((req, res, next) => {
+//     res.locals.error = req.flash('error');
+//     res.locals.user = req.user || null;
+//     next();
+// });
 
 
 //Rutas
